@@ -8,20 +8,19 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { Button } from "@/components/ui/button"
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import CustomInput from './CustomInput';
 
 const formSchema = z.object({
-  username: z.string().min(2,  {
-    message: "Username must be at least 2 characters.",
-  })
+    email: z.string().email(),
 })
 
 
@@ -29,19 +28,19 @@ const AuthForm = ({ type }: { type: String }) => {
     const [user, setUser] = useState(null)
 
     // 1. Define your form.
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      username: "",
-    },
-  })
- 
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
-  }
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            email: "",
+        },
+    })
+
+    // 2. Define a submit handler.
+    function onSubmit(values: z.infer<typeof formSchema>) {
+        // Do something with the form values.
+        // ✅ This will be type-safe and validated.
+        console.log(values)
+    }
 
     return (
         <section className='auth-form'>
@@ -61,11 +60,11 @@ const AuthForm = ({ type }: { type: String }) => {
                 <div className="flex flex-col gap-1 md:gap-3">
                     <h1 className='text-24 lg:text-36 font-semibold text-gray-900'>
                         {
-                            user? 'Link Account' : type === 'sign-in' ? 'Sign In' : 'Sign Up'
+                            user ? 'Link Account' : type === 'sign-in' ? 'Sign In' : 'Sign Up'
                         }
                         <p className="text-16 font-normal text-gray-600">
                             {
-                                user? 'Link your account to continue' : type === 'sign-in' ? 'Sign in to your account' : 'Create an account'
+                                user ? 'Link your account to continue' : type === 'sign-in' ? 'Sign in to your account' : 'Create an account'
                             }
                         </p>
                     </h1>
@@ -73,36 +72,87 @@ const AuthForm = ({ type }: { type: String }) => {
             </header>
 
             {
-                user? (
+                user ? (
                     <div className="flex flex-col gap-4">
                         {/* paidlink */}
                     </div>
                 )
-                : (
-                    <>
+                    : (
+                        <>
                             <Form {...form}>
                                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+
+                                    <CustomInput
+                                        control={form.control}
+                                        name='username'
+                                        label='User name'
+                                        placeholder='Enter your user name'
+                                    />
+
+                                    <CustomInput
+                                        control={form.control}
+                                        name='password'
+                                        label='Password'
+                                        placeholder='password'
+                                    />
+
                                     <FormField
                                         control={form.control}
-                                        name="username"
+                                        name="email"
                                         render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Username</FormLabel>
-                                                <FormControl>
-                                                    <Input placeholder="shadcn" {...field} />
-                                                </FormControl>
-                                                <FormDescription>
-                                                    This is your public display name.
-                                                </FormDescription>
-                                                <FormMessage />
-                                            </FormItem>
+                                            <div className='form-item'>
+                                                <FormLabel className='form-label'>
+                                                    Email
+                                                </FormLabel>
+
+                                                <div className="flex w-full flex-col">
+                                                    <FormControl>
+                                                        <Input
+                                                            placeholder='Enter your email'
+                                                            className='input-class'
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+
+                                                    <FormMessage
+                                                        className='form-message mt-2'
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
+                                    />
+
+                                    <FormField
+                                        control={form.control}
+                                        name="password"
+                                        render={({ field }) => (
+                                            <div className='form-item'>
+                                                <FormLabel className='form-label'>
+                                                    Password
+                                                </FormLabel>
+
+                                                <div className="flex w-full flex-col">
+                                                    <FormControl>
+                                                        <Input
+                                                            placeholder='Enter your password'
+                                                            className='input-class'
+                                                            type='password'
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+
+                                                    <FormMessage
+                                                        className='form-message mt-2'
+                                                    />
+                                                </div>
+                                            </div>
                                         )}
                                     />
                                     <Button type="submit">Submit</Button>
                                 </form>
                             </Form>
-                    </>
-                )
+                        </>
+                    )
             }
         </section>
     )
