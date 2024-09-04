@@ -33,8 +33,13 @@ export async function signUp(userData: SignUpParams) {
     }
 }
 
-export async function signIn() {
-    try { }
+export async function signIn({ email, password }: signInProps) {
+    try { 
+        const { account } = await createAdminClient();
+        const response = await account.createEmailPasswordSession(email, password);
+
+        return parseStringify(response);
+    }
     catch (error) {
         console.error("Error signing in user: ", error);
     }
@@ -43,7 +48,8 @@ export async function signIn() {
 export async function getLoggedInUser() {
     try {
         const { account } = await createSessionClient();
-        return await account.get();
+        const user = await account.get();
+        return parseStringify(user);
     } catch (error) {
         return null;
     }

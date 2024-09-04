@@ -1,7 +1,6 @@
 "use client";
 import React from 'react'
 import { useState } from 'react'
-import { useRouter } from 'next/router'
 import Link from 'next/link'
 import Image from 'next/image'
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -13,6 +12,7 @@ import CustomInput from './CustomInput';
 import { authFormSchema } from '@/lib/utils';
 import { Loader2 } from 'lucide-react';
 import { signUp, signIn } from '@/lib/actions/user.actions';
+import { useRouter } from 'next/navigation';
 
 const AuthForm = ({ type }: { type: string }) => {
     const router = useRouter();
@@ -37,12 +37,12 @@ const AuthForm = ({ type }: { type: string }) => {
                 setUser(newUser)
 
             } else if (type === 'sign-in') {
-                /* const response = await signIn({
+                const response = await signIn({
                     email: values.email,
                     password: values.password
                 })
 
-                if (response) router.push('/') */
+                if (response) router.push('/')
 
             } else {
                 new Error('Invalid form type')
