@@ -1,27 +1,21 @@
 "use client";
 import React from 'react'
 import { useState } from 'react'
+import { useRouter } from 'next/router'
 import Link from 'next/link'
 import Image from 'next/image'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { Button } from "@/components/ui/button"
-import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+import { Form } from "@/components/ui/form"
 import CustomInput from './CustomInput';
 import { authFormSchema } from '@/lib/utils';
 import { Loader2 } from 'lucide-react';
+import { signUp, signIn } from '@/lib/actions/user.actions';
 
 const AuthForm = ({ type }: { type: string }) => {
+    const router = useRouter();
     const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const formSchema = authFormSchema(type);
@@ -34,10 +28,31 @@ const AuthForm = ({ type }: { type: string }) => {
         },
     })
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
         setIsLoading(true)
-        console.log(values)
-        setIsLoading(false)
+        try {
+            console.log(values)
+            if (type === 'sign-up') {
+                const newUser = await signUp(values)
+                setUser(newUser)
+
+            } else if (type === 'sign-in') {
+                const response = await signIn({
+                    email: values.email,
+                    password: values.password
+                })
+
+                if (response) router.push('/')
+
+            } else {
+                new Error('Invalid form type')
+            }
+
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setIsLoading(false)
+        }
     }
 
     return (
@@ -105,6 +120,13 @@ const AuthForm = ({ type }: { type: string }) => {
                                                     name='address1'
                                                     label='Address'
                                                     placeholder="ex: 123, Main Street"
+                                                />
+
+                                                <CustomInput
+                                                    control={form.control}
+                                                    name='city'
+                                                    label='City'
+                                                    placeholder="ex: New York"
                                                 />
 
                                                 <div className="flex gap-4">
