@@ -37,12 +37,12 @@ const AuthForm = ({ type }: { type: string }) => {
                 setUser(newUser)
 
             } else if (type === 'sign-in') {
-                const response = await signIn({
+                /* const response = await signIn({
                     email: values.email,
                     password: values.password
                 })
 
-                if (response) router.push('/')
+                if (response) router.push('/') */
 
             } else {
                 new Error('Invalid form type')
