@@ -63,3 +63,14 @@ export async function getLoggedInUser() {
         return null;
     }
 }
+
+export async function logoutAccount() { 
+    try {
+        const { account } = await createSessionClient();
+        cookies().delete("appwrite-session");
+        await account.deleteSession("current");
+    } catch (error) { 
+        console.error("Error signing out user: ", error);
+        return null;
+    }
+}
