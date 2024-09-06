@@ -34,7 +34,20 @@ const AuthForm = ({ type }: { type: string }) => {
         try {
             console.log(values)
             if (type === 'sign-up') {
-                const newUser = await signUp(values)
+                const userData = {
+                    firstName: values.firstName!,
+                    lastName: values.lastName!,
+                    address1: values.address1!,
+                    city: values.city!,
+                    state: values.state!,
+                    postalCode: values.postalCode!,
+                    dateOfBirth: values.dateOfBirth!,
+                    ssn: values.ssn!,
+                    email: values.email,
+                    password: values.password
+                }
+
+                const newUser = await signUp(userData)
                 setUser(newUser)
 
             } else if (type === 'sign-in') {
@@ -149,7 +162,7 @@ const AuthForm = ({ type }: { type: string }) => {
                                                 <div className="flex gap-4">
                                                     <CustomInput
                                                         control={form.control}
-                                                        name='birthDate'
+                                                        name='dateOfBirth'
                                                         label='Date of Birth'
                                                         placeholder='YYYY-MM-DD'
                                                     />
