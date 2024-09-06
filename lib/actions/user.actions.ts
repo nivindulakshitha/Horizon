@@ -102,6 +102,20 @@ export async function createLinkToken(user: User) {
     }
 }
 
+export async function createBankAccount({ userId, bankId, accountId, accessToken, fundingSourceUrl, sharableId }: createBankAccountProps) {
+    try {
+        const { database } = await createAdminClient();
+
+        const bankAccount = await database.createDocument({
+
+        })
+
+    } catch (error) {
+        console.error("Error creating bank account: ", error);
+        return null;
+    }
+}
+
 export async function exchangePublicToken({ publicToken, user }: exchangePublicTokenProps) {
     try {
         const response = await plaidClient.itemPublicTokenExchange({
