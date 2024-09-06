@@ -6,9 +6,14 @@ import { createAdminClient } from "../appwrite";
 import { encryptId, parseStringify } from "../utils";
 import { CountryCode, ProcessorTokenCreateRequest, ProcessorTokenCreateRequestProcessorEnum, Products } from "plaid";
 import { plaidClient } from "../plaid";
-import { access } from "fs";
 import { revalidatePath } from "next/cache";
 import { addFundingSource } from "./dwolla.actions";
+
+const { 
+    APPWRITE_DATABASE_ID: DATABASE_ID,
+    APPWRITE_USER_COLLECTION_ID: USER_COLLECTION_ID,
+    APPWRITE_BANK_COLLECTION_ID: BANK_COLLECTION_ID,
+} = process.env;
 
 export async function signUp(userData: SignUpParams) {
     const { email, password, firstName, lastName } = userData;
@@ -104,12 +109,23 @@ export async function createLinkToken(user: User) {
 
 export async function createBankAccount({ userId, bankId, accountId, accessToken, fundingSourceUrl, sharableId }: createBankAccountProps) {
     try {
-        const { database } = await createAdminClient();
+        const { databases } = await createAdminClient();
 
-        const bankAccount = await database.createDocument({
+        const bankAccount = await databases.createDocument(
+            DATABASE_ID!,
+            BANK_COLLECTION_ID!,
+            ID.unique(),
+            {
+                userId,
+                bankId,
+                accountId,
+                accessToken,
+                fundingSourceUrl,
+                sharableId,
+            }
+        )
 
-        })
-
+        return parseStringify(bankAccount);
     } catch (error) {
         console.error("Error creating bank account: ", error);
         return null;
