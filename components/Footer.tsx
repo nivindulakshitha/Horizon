@@ -24,7 +24,7 @@ const Footer = ({ user, type = "desktop" }: FooterProps) => {
 
             <div className={type === 'mobile' ? 'footer_email-mobile' : 'footer_email'}>
                 <h1 className='text-14 truncate font-semibold text-gray-700'>
-                    {user?.firstName || 'G'}
+                    {`${user?.firstName} ${user?.lastName}` || 'Guest User'}
                 </h1>
 
                 <p className="text-14 truncate font-normal text-gray-600">

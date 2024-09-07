@@ -9,7 +9,11 @@ import { Pagination } from './Pagination'
 const RecentTransactions = ({ accounts, transactions = [], appwriteItemId, page }: RecentTransactionsProps) => {
     const rowsPerPage = 10;
     const totalPages = Math.ceil(transactions.length / rowsPerPage);
-    
+    const indexOfLastTransaction = page * rowsPerPage;
+    const indexOfFirstTransaction = indexOfLastTransaction - rowsPerPage;
+
+    const currentTransactions = transactions.slice(indexOfFirstTransaction, indexOfLastTransaction);
+
     return (
         <section className='recent-transactions'>
             <header className="flex items-center justify-between">
@@ -39,9 +43,15 @@ const RecentTransactions = ({ accounts, transactions = [], appwriteItemId, page 
                                 type='full'
                             />
 
-                            <TransactionTable transactions={transactions} origin='transaction-history' />
+                            <TransactionTable transactions={currentTransactions}/>
                             
-                            <Pagination page={page} totalPages={10} />
+                            { 
+                                totalPages > 1 && (
+                                    <div className="m-y-4 w-full">
+                                        <Pagination page={page} totalPages={totalPages} />
+                                    </div>
+                                )
+                            }
                         </TabsContent>
                     ))
                 }
