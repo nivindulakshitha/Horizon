@@ -19,6 +19,8 @@ const Home = async ({ searchParams: { id, page } }: SearchParamProps) => {
 
 	const accountsData = account?.data;
 
+	console.log({accountsData, account});
+
 	return (
 		<section className='home'>
 			<div className='home-content'>
