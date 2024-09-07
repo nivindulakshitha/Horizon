@@ -35,7 +35,7 @@ const RecentTransactions = ({ accounts, transactions = [], appwriteItemId, page 
                                 type='full'
                             />
 
-                            <TransactionTable transactions={transactions} />
+                            <TransactionTable transactions={transactions} origin='transaction-history'/>
                         </TabsContent>
                     ))
                 }

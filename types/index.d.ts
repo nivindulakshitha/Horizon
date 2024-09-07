@@ -242,6 +242,7 @@ declare interface CategoryBadgeProps {
 
 declare interface TransactionTableProps {
   transactions: Transaction[];
+  origin?: 'home' | 'transaction-history';
 }
 
 declare interface CategoryProps {

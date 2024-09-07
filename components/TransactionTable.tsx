@@ -23,17 +23,17 @@ const CategoryBadge = ({ category }: { category: string }) => {
     )
 }
 
-const TransactionTable = ({ transactions }: TransactionTableProps) => {
+const TransactionTable = ({ transactions, origin = 'home' }: TransactionTableProps) => {
     return (
         <Table>
             <TableHeader className='bg-[#f9fafb]'>
                 <TableRow>
                     <TableHead className="pax-2">Transaction</TableHead>
                     <TableHead className="pax-2">Amount</TableHead>
-                    <TableHead className="pax-2">Status</TableHead>
+                    <TableHead className={`pax-2 ${origin === 'transaction-history' ? 'pax-2 max-2xl:hidden' : ''}`}>Status</TableHead>
                     <TableHead className="pax-2">Date</TableHead>
-                    <TableHead className="pax-2 max-lg:hidden">Channel</TableHead>
-                    <TableHead className="pax-2 max-lg:hidden">Category</TableHead>
+                    <TableHead className={`pax-2 ${origin === 'transaction-history' ? 'pax-2 max-2xl:hidden' : ''}`}>Channel</TableHead>
+                    <TableHead className={`pax-2 ${origin === 'transaction-history' ? 'pax-2 max-2xl:hidden' : ''}`}>Category</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
@@ -60,7 +60,7 @@ const TransactionTable = ({ transactions }: TransactionTableProps) => {
                                     {isDebit ? `-${amount}` : amount}
                                 </TableCell>
 
-                                <TableCell className='pl-2 pr-10 '>
+                                <TableCell className={`pl-2 pr-10 ${origin === 'transaction-history' ? 'pax-2 max-2xl:hidden' : ''}`}>
                                     <CategoryBadge category={status} />
                                 </TableCell>
 
@@ -68,11 +68,11 @@ const TransactionTable = ({ transactions }: TransactionTableProps) => {
                                     {formatDateTime(new Date(transaction.date)).dateTime}
                                 </TableCell>
 
-                                <TableCell className="max-lg:hidden pl-2 pr-10 capitalize" >
+                                <TableCell className={`pl-2 pr-10 ${origin === 'transaction-history' ? 'pax-2 max-2xl:hidden' : ''}`}>
                                     {transaction.paymentChannel}
                                 </TableCell>
 
-                                <TableCell className="max-lg:hidden pl-2 pr-10 ">
+                                <TableCell className={`pl-2 pr-10 ${origin === 'transaction-history' ? 'pax-2 max-2xl:hidden' : ''}`}>
                                     <CategoryBadge category={transaction.category} />
                                 </TableCell>
                             </TableRow>
