@@ -9,13 +9,13 @@ import { plaidClient } from "../plaid";
 import { revalidatePath } from "next/cache";
 import { addFundingSource, createDwollaCustomer } from "./dwolla.actions";
 
-const { 
+const {
     APPWRITE_DATABASE_ID: DATABASE_ID,
     APPWRITE_USER_COLLECTION_ID: USER_COLLECTION_ID,
     APPWRITE_BANK_COLLECTION_ID: BANK_COLLECTION_ID,
 } = process.env;
 
-export async function signUp({ password, ...userData}: SignUpParams) {
+export async function signUp({ password, ...userData }: SignUpParams) {
     const { email, firstName, lastName } = userData;
     let newUserAccount;
 
@@ -74,19 +74,37 @@ export async function signUp({ password, ...userData}: SignUpParams) {
     }
 }
 
+export async function getUserInfo({ userId }: getUserInfoProps) {
+    try {
+        const { databases } = await createAdminClient();
+        const user = await databases.listDocuments(
+            DATABASE_ID!,
+            USER_COLLECTION_ID!,
+            [Query.equal("userId", [userId])]
+        );
+
+        return parseStringify(user.documents[0]);
+    } catch (error) {
+        console.error("Error getting user info: ", error);
+        return null;
+    }
+}
+
 export async function signIn({ email, password }: signInProps) {
     try {
         const { account } = await createAdminClient();
-        const response = await account.createEmailPasswordSession(email, password);
+        const session = await account.createEmailPasswordSession(email, password);
 
-        cookies().set("appwrite-session", response.secret, {
+        cookies().set("appwrite-session", session.secret, {
             path: "/",
             httpOnly: true,
             sameSite: "strict",
             secure: true,
         });
 
-        return parseStringify(response);
+        const user = await getUserInfo({ userId: session.userId });
+
+        return parseStringify(user);
     }
     catch (error) {
         console.error("Error signing in user: ", error);
@@ -96,7 +114,9 @@ export async function signIn({ email, password }: signInProps) {
 export async function getLoggedInUser() {
     try {
         const { account } = await createSessionClient();
-        const user = await account.get();
+        const result = await account.get();
+        const user = await getUserInfo({ userId: result.$id });
+
         return parseStringify(user);
     } catch (error) {
         console.error("Error getting logged in user: ", error);
@@ -217,7 +237,7 @@ export async function exchangePublicToken({ publicToken, user }: exchangePublicT
     }
 }
 
-export async function getBanks({ userId }: getBanksProps) { 
+export async function getBanks({ userId }: getBanksProps) {
     try {
         const { databases } = await createAdminClient();
         const banks = await databases.listDocuments(
