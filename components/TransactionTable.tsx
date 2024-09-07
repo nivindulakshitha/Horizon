@@ -8,8 +8,17 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { formatAmount, formatDateTime, getTransactionStatus, removeSpecialCharacters } from '@/lib/utils'
+import { cn, formatAmount, formatDateTime, getTransactionStatus, removeSpecialCharacters } from '@/lib/utils'
 
+
+const CategoryBadge = ({ category }: { category: string }) => {
+    return (
+        <div className={cn('category-badge')} >
+            <div className={cn('size-2 rounded-full')} />
+            <p className={cn('text-[12px] font-medium')}>{category}</p>
+        </div >
+    )
+}
 
 const TransactionTable = ({ transactions }: TransactionTableProps) => {
     return (
@@ -20,8 +29,8 @@ const TransactionTable = ({ transactions }: TransactionTableProps) => {
                     <TableHead className="pax-2">Amount</TableHead>
                     <TableHead className="pax-2">Status</TableHead>
                     <TableHead className="pax-2">Date</TableHead>
-                    <TableHead className="pax-2 max-md:hidden">Channel</TableHead>
-                    <TableHead className="pax-2 max-md:hidden">Category</TableHead>
+                    <TableHead className="pax-2 max-lg:hidden">Channel</TableHead>
+                    <TableHead className="pax-2 max-lg:hidden">Category</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
@@ -33,35 +42,35 @@ const TransactionTable = ({ transactions }: TransactionTableProps) => {
                         const isDebit = transaction.type === 'debit';
 
                         return (
-                            <TableRow key={transaction.id}>
-                                <TableCell>
-                                    <div>
-                                        <h1>
+                            <TableRow key={transaction.id} className={
+                                isDebit || amount[0] === '-' ? 'bg-[#FFFBFA]' : 'bg-[#F6FEF9] !over-bg-none !border-b-default'
+                            }>
+                                <TableCell className='pl-2 pr-10'>
+                                    <div className='flex items-center gap-3'>
+                                        <h1 className='text-14 truncate font-semibold text-[#344054]'>
                                             {removeSpecialCharacters(transaction.name)}
                                         </h1>
                                     </div>
                                 </TableCell>
 
-                                <TableCell>
-                                    {isDebit ? `-${amount}` : amount }
+                                <TableCell className={`pl-2 pr-10 font-semibold ${isDebit || amount[0] === '-' ? 'text-[#F44438]' : 'text-[#039855]'}`}>
+                                    {isDebit ? `-${amount}` : amount}
                                 </TableCell>
 
-                                <TableCell>
-                                    <span className={`status ${status}`}>
-                                        {status}
-                                    </span>
+                                <TableCell className='pl-2 pr-10 '>
+                                    <CategoryBadge category={status} />
                                 </TableCell>
 
-                                <TableCell>
+                                <TableCell className='min-w-32 pl-2 pr-10 '>
                                     {formatDateTime(new Date(transaction.date)).dateTime}
                                 </TableCell>
 
-                                <TableCell className="max-md:hidden">
+                                <TableCell className="max-lg:hidden pl-2 pr-10 capitalize" >
                                     {transaction.paymentChannel}
                                 </TableCell>
 
-                                <TableCell className="max-md:hidden">
-                                    {transaction.category}
+                                <TableCell className="max-lg:hidden pl-2 pr-10 ">
+                                    <CategoryBadge category={transaction.category} />
                                 </TableCell>
                             </TableRow>
                         )
