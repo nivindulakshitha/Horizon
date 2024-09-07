@@ -240,7 +240,7 @@ const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
                         {
                             isLoading ? (
                                 <>
-                                    <Loader2 size={20} className="animate-spin" /> & nbsp; Sending...
+                                    <Loader2 size={20} className="animate-spin" />Sending Funds...
                                 </>
                             ) : (
                                 "Transfer Funds"
