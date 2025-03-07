@@ -11,7 +11,7 @@ pipeline {
         stage('Prepare Environment') {
     steps {
         withCredentials([file(credentialsId: 'app-env-file', variable: 'ENV_FILE')]) {
-            sh 'cp $ENV_FILE .env'
+            bat 'cp $ENV_FILE .env'
         }
     }
 }
