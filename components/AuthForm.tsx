@@ -148,7 +148,7 @@ const AuthForm = ({ type }: { type: string }) => {
                                                         control={form.control}
                                                         name='state'
                                                         label='State'
-                                                        placeholder='ex: NWP'
+                                                        placeholder='ex: NW'
                                                     />
 
                                                     <CustomInput
