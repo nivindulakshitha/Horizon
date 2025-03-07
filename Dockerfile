@@ -42,10 +42,6 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/next.config.mjs ./next.config.mjs
 
-# Copy Sentry configuration files if they exist
-COPY --from=builder /app/sentry.* ./
-COPY --from=builder /app/.sentryclirc ./.sentryclirc
-
 # Set correct permissions
 RUN chown -R nextjs:nodejs /app
 
