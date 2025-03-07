@@ -8,24 +8,46 @@ pipeline {
             }
         }
         
+        stage('Setup Environment') {
+            steps {
+                // Create .env file for local development
+                // This file is created during build time and not committed to GitHub
+                bat '''
+                    (
+                        echo DWOLLA_ENVIRONMENT=sandbox
+                        echo NODE_ENV=production
+                        echo PORT=3000
+                        REM Add other environment variables as needed
+                    ) > .env
+                '''
+                
+                // Show the .env file for debugging (remove in production)
+                bat 'type .env'
+            }
+        }
+        
         stage('Install Dependencies') {
             steps {
                 bat 'npm install'
-                // Or if using yarn
-                // bat 'yarn install'
             }
         }
         
         stage('Lint') {
             steps {
                 bat 'npm run lint'
-                // Or if using yarn
-                // bat 'yarn lint'
+            }
+        }
+        
+        stage('Clean Existing Containers') {
+            steps {
+                bat 'cmd /c "docker stop horizon-container 2>nul || echo No container to stop"'
+                bat 'cmd /c "docker rm horizon-container 2>nul || echo No container to remove"'
             }
         }
         
         stage('Build Docker Image') {
             steps {
+                // Build the Docker image with the .env file
                 bat 'docker build -t horizon:latest .'
             }
         }
@@ -43,13 +65,13 @@ pipeline {
         }
         failure {
             echo 'Pipeline failed. Please check the logs for details.'
-            // Clean up any running containers if needed
-            bat 'docker stop horizon-container || true'
-            bat 'docker rm horizon-container || true'
+            bat 'cmd /c "docker stop horizon-container 2>nul || echo No container to stop"'
+            bat 'cmd /c "docker rm horizon-container 2>nul || echo No container to remove"'
         }
         always {
-            // Clean up resources if needed
             bat 'docker ps -a'
+            // Clean up the .env file after build to avoid leaving credentials
+            bat 'del .env'
         }
     }
 }

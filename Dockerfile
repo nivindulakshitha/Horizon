@@ -42,6 +42,9 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/next.config.mjs ./next.config.mjs
 
+# Copy the .env file created during the Jenkins build
+COPY --from=builder /app/.env ./.env
+
 # Set correct permissions
 RUN chown -R nextjs:nodejs /app
 
