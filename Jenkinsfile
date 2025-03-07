@@ -9,25 +9,10 @@ pipeline {
         }
 
         stage('Prepare Environment') {
-    steps {
-        withCredentials([file(credentialsId: 'app-env-file', variable: 'ENV_FILE')]) {
-            bat 'copy "%ENV_FILE%" .env'
-        }
-    }
-}
-        
-        stage('Setup Environment') {
             steps {
-                // Create .env file for local development
-                // This file is created during build time and not committed to GitHub
-                bat '''
-                    (
-                        echo DWOLLA_ENVIRONMENT=sandbox
-                        echo NODE_ENV=production
-                        echo PORT=3000
-                        REM Add other environment variables as needed
-                    ) > .env
-                '''
+                withCredentials([file(credentialsId: 'app-env-file', variable: 'ENV_FILE')]) {
+                    bat 'copy "%ENV_FILE%" .env'
+                }
                 
                 // Show the .env file for debugging (remove in production)
                 bat 'type .env'
