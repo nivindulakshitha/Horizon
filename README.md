@@ -71,6 +71,7 @@ This project is licensed under the **MIT License**.
 
 ### 💡 Want to Contribute?  
 Feel free to fork this repository, submit PRs, or report issues! Contributions are always welcome.  
+</br>
 <a href="https://github.com/nivindulakshitha/Horizon/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=nivindulakshitha/Horizon" />
 </a>
