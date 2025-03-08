@@ -117,14 +117,14 @@ const AuthForm = ({ type }: { type: string }) => {
                                                         control={form.control}
                                                         name='firstName'
                                                         label='First Name'
-                                                        placeholder='John'
+                                                        placeholder='Anupa'
                                                     />
 
                                                     <CustomInput
                                                         control={form.control}
                                                         name='lastName'
                                                         label='Last Name'
-                                                        placeholder='Smith'
+                                                        placeholder='Dinu'
                                                     />
                                                 </div>
 
@@ -182,7 +182,7 @@ const AuthForm = ({ type }: { type: string }) => {
                                         control={form.control}
                                         name='email'
                                         label='E mail'
-                                        placeholder='johnsmith@email.com'
+                                        placeholder='anupadinu@email.com'
                                     />
 
                                     <CustomInput
